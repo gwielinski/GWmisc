@@ -1,0 +1,10 @@
+Package: GWmisc
+Type: Package
+Title: Provides various useful functions in R
+Version: 0.1.0
+Author: Grzegorz Wielinski
+Maintainer: Grzegorz Wielinski <gregory.wielinski@gmail.com>
+Description: Various functions
+License: BSD
+LazyLoad: yes
+RoxygenNote: 5.0.1
