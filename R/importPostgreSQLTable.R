@@ -12,7 +12,7 @@
 #' @examples
 #' importPostgreSQLTable("db", "localhost", 5431, "postgres", "pass", c("table1", "table2"), c(0.5, 1), c(TRUE, FALSE))
 
-importPostgreSQLTable <- function(dbname, host, port, user, password, tablename, rowProp, random) {
+importPostgreSQLTable <- function(dbname, host, port, user, password, tablename, rowProp, random, where=NULL) {
 	# Initialiser les objets
 		temp <- list()
 		tempNames <- vector(mode = "character")
@@ -32,16 +32,24 @@ importPostgreSQLTable <- function(dbname, host, port, user, password, tablename,
 			prop <- rowProp[i]				# lire la proportion d'observations à importer
 			rand <- random[i]				# lire si on effectue un import des données de types random ou séquentiel
 			dateTime <- Sys.time()			# Date et heure actuelle avant d'exécuter la requête
+      clause <- where[i]      # lire la cause where à assigner
 
-			# Créer la requête sql
-			if(rand == TRUE){
-				sqlQuery <- paste0("SELECT * FROM ", tbl, " ORDER BY RANDOM() LIMIT (SELECT reltuples::bigint*", prop, " AS estimate FROM pg_class where relname='", tbl, "');")
-				} else if(prop != 1){
-					sqlQuery <- paste0("SELECT * FROM ", tbl, " LIMIT (SELECT reltuples::bigint*", prop, " AS estimate FROM pg_class where relname='", tbl, "');")
-				} else {
-					sqlQuery <- paste0("SELECT * FROM ", tbl, ";")
-				}
-
+      # Créer la requête sql
+      case <- paste0(rand == TRUE, prop != 1, !is.na(clause))
+      sqlQuery <- switch(case,
+             "TRUETRUEFALSE" = {paste0("SELECT * FROM ", tbl, " ORDER BY RANDOM() LIMIT (SELECT reltuples::bigint*", prop, " AS estimate FROM pg_class where relname='", tbl, "');")
+             },
+             "TRUETRUETRUE" = {paste0("SELECT * FROM ", tbl, " ", clause, " ORDER BY RANDOM() LIMIT (SELECT reltuples::bigint*", prop, " AS estimate FROM pg_class where relname='", tbl, "');")
+             },
+             "FALSETRUEFALSE" = {paste0("SELECT * FROM ", tbl, " LIMIT (SELECT reltuples::bigint*", prop, " AS estimate FROM pg_class where relname='", tbl, "');")
+             },
+             "FALSETRUETRUE" = {paste0("SELECT * FROM ", tbl, " ", clause, " LIMIT (SELECT reltuples::bigint*", prop, " AS estimate FROM pg_class where relname='", tbl, "');")
+             },
+             "FALSEFALSEFALSE" = {paste0("SELECT * FROM ", tbl, ";")
+             },
+             "FALSEFALSETRUE" = {paste0("SELECT * FROM ", tbl, " ", clause, ";")
+             }
+      )
 
 			# Envoyer la requête et assigner la table dans une liste
 			eval(parse(text=paste0(tbl, " <- dbGetQuery(con, sqlQuery)")))  # Cette expression va créer un dataframe avec le nom de la table en exécutant la requête via la connection
