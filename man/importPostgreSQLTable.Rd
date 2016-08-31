@@ -5,7 +5,7 @@
 \title{importPostgreSQLTable}
 \usage{
 importPostgreSQLTable(dbname, host, port, user, password, tablename, rowProp,
-  random)
+  random, where = NULL, objectNames = NULL)
 }
 \arguments{
 \item{dbname}{parameter specific to the connection to the db}
@@ -23,6 +23,10 @@ importPostgreSQLTable(dbname, host, port, user, password, tablename, rowProp,
 \item{rowProp}{numeric vector containing the proportion of rows to be imported (from 0 to 1)}
 
 \item{random}{logical vector stating if the select query should be done in a random or sequential manner (TRUE is set to random)}
+
+\item{where}{character vector to parse as a where clause inside the query}
+
+\item{objectNames}{character vector to assign a name to the object that will be parsed to the global environment}
 }
 \description{
 Function to import all specified tables from a postgreSQL database
