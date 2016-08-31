@@ -9,14 +9,16 @@
 #' @param tablename character vector containing names of the desired tables to be imported
 #' @param rowProp numeric vector containing the proportion of rows to be imported (from 0 to 1)
 #' @param random logical vector stating if the select query should be done in a random or sequential manner (TRUE is set to random)
+#' @param where character vector to parse as a where clause inside the query
+#' @param objectNames character vector to assign a name to the object that will be parsed to the global environment
 #' @examples
 #' importPostgreSQLTable("db", "localhost", 5431, "postgres", "pass", c("table1", "table2"), c(0.5, 1), c(TRUE, FALSE))
 
-importPostgreSQLTable <- function(dbname, host, port, user, password, tablename, rowProp, random, where=NULL) {
+importPostgreSQLTable <- function(dbname, host, port, user, password, tablename, rowProp, random, where=NULL, objectNames=NULL) {
 	# Initialiser les objets
 		temp <- list()
 		tempNames <- vector(mode = "character")
-		importSummary <- data.frame(id = integer(), tablename = character(), rowProp = numeric(), random = logical(), query = character(), dateTime = as.POSIXct(character()), stringsAsFactors=FALSE)
+		importSummary <- data.frame(id = integer(), tablename = character(), rowProp = numeric(), random = logical(), query = character(), dateTime = as.POSIXct(character()), outputname = character(), stringsAsFactors=FALSE)
 
 	# Créer la connection à la base de données
 		# Establish connection to PoststgreSQL using RPostgreSQL
@@ -33,6 +35,7 @@ importPostgreSQLTable <- function(dbname, host, port, user, password, tablename,
 			rand <- random[i]				# lire si on effectue un import des données de types random ou séquentiel
 			dateTime <- Sys.time()			# Date et heure actuelle avant d'exécuter la requête
       clause <- where[i]      # lire la cause where à assigner
+      objname <- if(!is.null(objectNames)) {objectNames[i]} else {tablename[i]}
 
       # Créer la requête sql
       case <- paste0(rand == TRUE, prop != 1, !is.na(clause))
@@ -54,7 +57,7 @@ importPostgreSQLTable <- function(dbname, host, port, user, password, tablename,
 			# Envoyer la requête et assigner la table dans une liste
 			eval(parse(text=paste0(tbl, " <- dbGetQuery(con, sqlQuery)")))  # Cette expression va créer un dataframe avec le nom de la table en exécutant la requête via la connection
 			temp[[i]] <- eval(parse(text=tbl))								# Assigner la table i à l'emplacement i de la liste
-			tempNames <- c(tempNames, tbl)									# MAJ la liste des noms de tables
+			tempNames <- c(tempNames, objname)									# MAJ la liste des noms de tables
 			names(temp) <- tempNames										# MAJ les noms de la liste
 
 		# Populer la table de synthèse
@@ -65,6 +68,7 @@ importPostgreSQLTable <- function(dbname, host, port, user, password, tablename,
 			importSummary[i, 4] <- rand		# random
 			importSummary[i, 5] <- sqlQuery	# query
 			importSummary[i, 6] <- dateTime	#date and time
+			importSummary[i, 7] <- objname	#output name
 		}
 
 	# Fermer la connection à la base de données
