@@ -68,6 +68,10 @@ datetimeValorisation2 <- function(input, variableName, workOrder, simplifiedVect
       input[[paste0(variableName, "YW")]] <- floor_date(input$datetime, unit="week")
     }
 
+  if(simplifiedVector == FALSE){
+    input$datetime <- NULL
+  }
+  
   return(input)
 
 } # end function
