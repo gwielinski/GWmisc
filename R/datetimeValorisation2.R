@@ -3,7 +3,7 @@
 #' Function to enrich a datetime object
 #' @param input a data frame or a vector : data frame must be in this format : id, datetimesee. See simplifiedVector for info on the format of the vector option
 #' @param variableName single length vector to indicate the prefix of the newly create variable in this format : paste0(variableName, "dependingOnWorkOrder")
-#' @param workOrder vector to include all transformation to do on the datetime object : c("year", "month", "day", "week", "wday", "ymd", "ym", "yw")
+#' @param workOrder vector to include all transformation to do on the datetime object : c("year", "month", "day", "week", "wday", "wdayLabel", "ymd", "ym", "yw")
 #' @param simplifiedVector if simplifiedVector is TRUE, then the data frame is in a vector format containing the datetimes
 #' @export
 #' @examples
