@@ -8,7 +8,7 @@
 #' @export
 #' @examples
 #' x <- data.frame(x1 = 1:3, x2 = as.Date(c("2013-06-20", "2013-08-15", "2015-01-02")))
-#' y <- datetimeValorisation2(x, "TypeA", c("year", "month", "day", "week", "wday", "ymd", "ym", "yw"), simplifiedVector = FALSE)
+#' y <- datetimeValorisation2(x, "TypeA", c("year", "month", "day", "week", "wday", "wdayLabel", "ymd", "ym", "yw"), simplifiedVector = FALSE)
 
 datetimeValorisation2 <- function(input, variableName, workOrder, simplifiedVector = FALSE){
   # data frame must be in this format : id, datetime
@@ -51,6 +51,11 @@ datetimeValorisation2 <- function(input, variableName, workOrder, simplifiedVect
     # wday
     if("wday" %in% workOrder){
       input[[paste0(variableName, "Wday")]] <- wday(input$datetime)
+    }
+  
+    # wdayLabel
+    if("wdayLabel" %in% workOrder){
+      input[[paste0(variableName, "WdayLabel")]] <- wday(input$datetime, label = TRUE)
     }
 
     # YearMonthDay
