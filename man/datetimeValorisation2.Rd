@@ -12,7 +12,7 @@ datetimeValorisation2(input, variableName, workOrder,
 
 \item{variableName}{single length vector to indicate the prefix of the newly create variable in this format : paste0(variableName, "dependingOnWorkOrder")}
 
-\item{workOrder}{vector to include all transformation to do on the datetime object : c("year", "month", "day", "week", "wday", "ymd", "ym", "yw")}
+\item{workOrder}{vector to include all transformation to do on the datetime object : c("year", "month", "day", "week", "wday", "wdayLabel", "ymd", "ym", "yw")}
 
 \item{simplifiedVector}{if simplifiedVector is TRUE, then the data frame is in a vector format containing the datetimes}
 }
@@ -21,6 +21,6 @@ Function to enrich a datetime object
 }
 \examples{
 x <- data.frame(x1 = 1:3, x2 = as.Date(c("2013-06-20", "2013-08-15", "2015-01-02")))
-y <- datetimeValorisation2(x, "TypeA", c("year", "month", "day", "week", "wday", "ymd", "ym", "yw"), simplifiedVector = FALSE)
+y <- datetimeValorisation2(x, "TypeA", c("year", "month", "day", "week", "wday", "wdayLabel", "ymd", "ym", "yw"), simplifiedVector = FALSE)
 }
 
