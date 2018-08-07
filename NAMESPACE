@@ -2,6 +2,7 @@
 
 export(ageClass)
 export(datetimeValorisation2)
+export(datetimeValorisation3)
 export(dfFromListToMainEnv)
 export(earth.dist)
 export(importAllCsvFromFolder)
