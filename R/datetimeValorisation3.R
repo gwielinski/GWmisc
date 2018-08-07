@@ -1,4 +1,4 @@
-#' datetimeValorisation2
+#' datetimeValorisation3
 #'
 #' Function to enrich a datetime object
 #' @param input a data frame or a vector : data frame must be in this format : id, datetimesee. See simplifiedVector for info on the format of the vector option
@@ -8,7 +8,7 @@
 #' @export
 #' @examples
 #' x <- data.frame(x1 = 1:3, x2 = as.Date(c("2013-06-20", "2013-08-15", "2015-01-02")))
-#' y <- datetimeValorisation2(x, "TypeA", c("year", "month", "day", "week", "wday", "wdayLabel", "ymd", "ym", "yw"), simplifiedVector = FALSE)
+#' y <- datetimeValorisation3(x, "TypeA", c("year", "month", "day", "week", "wday", "wdayLabel", "ymd", "ym", "yw"), simplifiedVector = FALSE)
 
 datetimeValorisation3 <- function(input, variableName, workOrder, simplifiedVector = FALSE){
   # data frame must be in this format : id, datetime
